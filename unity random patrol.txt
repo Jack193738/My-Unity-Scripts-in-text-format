@@ -1,0 +1,113 @@
+public float minX;
+    public float maxX;
+    public float minY;
+    public float maxY;
+    float speed;
+    public float secondsToMaxDifficulty = 60;
+    public float minSpeed;
+    public float maxSpeed;
+    
+
+
+ 
+    public float RespawnDelay = 4f;
+
+    Vector2 targetPos;
+     
+    void Start()
+    {
+        targetPos = getrandomPosition();
+        
+        
+        
+    }
+
+          
+    void Update()
+    {
+
+        if((Vector2)transform.position != targetPos)
+        {
+            speed = Mathf.Lerp(minSpeed, maxSpeed, getDifficultyPercent());
+            transform.position = Vector2.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        }
+        else
+        {
+            targetPos = getrandomPosition();
+        }
+    }
+    Vector2 getrandomPosition()
+    {
+        float randomX = Random.Range(minX, maxX);
+        float randomY = Random.Range(minY, maxY);
+        return new Vector2(randomX, randomY);
+    }
+    
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if (collision.tag == "Planets")
+        {
+            
+
+
+
+
+            StartCoroutine(restart(RespawnDelay));
+
+            restart();
+           
+            dead();
+            
+    
+          
+            
+
+            
+        }
+
+        
+
+
+    }
+
+    void restart()
+    {
+        
+    }
+
+    float getDifficultyPercent()
+    {
+        return Mathf.Clamp01 (Time.timeSinceLevelLoad / secondsToMaxDifficulty);
+    }
+    void dead()
+    {
+        ParticleSystem pS = GetComponent<ParticleSystem>();
+        pS.Play();
+
+
+
+    }
+   public IEnumerator restart(float respawnDelay)
+    {
+
+        yield return new WaitForSeconds(RespawnDelay);
+
+
+
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);  
+        
+
+
+
+
+
+
+
+    }
+   
+
+
+
+}
